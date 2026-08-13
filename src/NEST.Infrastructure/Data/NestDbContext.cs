@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using NEST.Application.Common.Interfaces;
 using NEST.Domain.Entities;
 using NEST.Domain.Entities.TODO;
 using Task = NEST.Domain.Entities.TODO.Task;
 
 namespace NEST.Infrastructure.Data;
 
-public class NestDbContext(DbContextOptions<NestDbContext> options) : DbContext(options)
+public class NestDbContext(DbContextOptions<NestDbContext> options) : DbContext(options), IApplicationDbContext
 {
     public DbSet<User> Users { get; set; }
     
