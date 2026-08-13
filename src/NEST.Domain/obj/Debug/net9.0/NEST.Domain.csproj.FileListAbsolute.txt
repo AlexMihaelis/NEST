@@ -1,0 +1,12 @@
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\bin\Debug\net9.0\NEST.Domain.deps.json
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\bin\Debug\net9.0\NEST.Domain.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\bin\Debug\net9.0\NEST.Domain.pdb
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.AssemblyInfoInputs.cache
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.AssemblyInfo.cs
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.csproj.CoreCompileInputs.cache
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.sourcelink.json
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\refint\NEST.Domain.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\NEST.Domain.pdb
+C:\Users\elina\RiderProjects\NEST\src\NEST.Domain\obj\Debug\net9.0\ref\NEST.Domain.dll

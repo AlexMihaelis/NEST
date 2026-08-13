@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("2267aa6f-eb15-4aad-ba16-2b3155ae1ab5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("NEST.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+89247caed93be717a8220a47dc48998fbc77a03e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3223e7f708e63142f88ad0f00ffb421502555726")]
 [assembly: System.Reflection.AssemblyProductAttribute("NEST.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NEST.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

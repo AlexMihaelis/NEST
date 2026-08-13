@@ -1,0 +1,16 @@
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\bin\Debug\net9.0\NEST.Application.deps.json
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\bin\Debug\net9.0\NEST.Application.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\bin\Debug\net9.0\NEST.Application.pdb
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\bin\Debug\net9.0\NEST.Domain.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\bin\Debug\net9.0\NEST.Domain.pdb
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.csproj.AssemblyReference.cache
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.AssemblyInfoInputs.cache
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.AssemblyInfo.cs
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.csproj.CoreCompileInputs.cache
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.sourcelink.json
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.App.F7DFE482.Up2Date
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\refint\NEST.Application.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\NEST.Application.pdb
+C:\Users\elina\RiderProjects\NEST\src\NEST.Application\obj\Debug\net9.0\ref\NEST.Application.dll
