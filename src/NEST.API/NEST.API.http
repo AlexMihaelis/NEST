@@ -1,0 +1,6 @@
+@NEST.API_HostAddress = http://localhost:5185
+
+GET {{NEST.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

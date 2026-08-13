@@ -1,0 +1,15 @@
+services:
+
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: nest
+      POSTGRES_PASSWORD: nest_password
+      POSTGRES_DB: nest
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
