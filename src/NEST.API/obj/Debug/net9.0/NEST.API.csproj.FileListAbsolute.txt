@@ -6,7 +6,6 @@ C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\NEST.API.deps.js
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\NEST.API.runtimeconfig.json
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\NEST.API.dll
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\NEST.API.pdb
-C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
@@ -145,3 +144,6 @@ C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Microsoft.Identi
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\elina\RiderProjects\NEST\src\NEST.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

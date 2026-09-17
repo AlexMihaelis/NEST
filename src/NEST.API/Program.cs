@@ -1,11 +1,14 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NEST.Application;
+using NEST.Application.Common.Behaviors;
 using NEST.Application.Common.Interfaces;
 using NEST.Infrastructure.Data;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<NestDbContext>(options =>
     options.UseNpgsql(
@@ -19,15 +22,20 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
 
-builder.Services.AddOpenApi();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.Run();

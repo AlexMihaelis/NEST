@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NEST.Application.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bda4053471e39d6101195496933569da2ffc329d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f38c9f34d720764954904b32ac98cafc4975137d")]
 [assembly: System.Reflection.AssemblyProductAttribute("NEST.Application.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NEST.Application.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
