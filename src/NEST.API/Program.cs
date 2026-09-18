@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NEST.API.Common.Middleware;
 using NEST.Application;
 using NEST.Application.Common.Behaviors;
 using NEST.Application.Common.Interfaces;
@@ -36,6 +37,10 @@ builder.Services.AddTransient(
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+// Подключаем middleware для обработки ошибок валидации
+// Он должен находиться перед контроллерами, чтобы перехватывать исключения, возникающие в следующих компонентах Pipeline
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

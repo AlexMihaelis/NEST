@@ -9,7 +9,7 @@ public class CreateBoardCommandValidator
     public CreateBoardCommandValidator()
     {
         // Проверяем название доски
-        RuleFor(x => x.Name)
+        RuleFor(b => b.Name)
             .NotEmpty()
             .WithMessage("Name is required")
             .MaximumLength(100)
@@ -17,12 +17,12 @@ public class CreateBoardCommandValidator
 
         // Проверяем описание доски
         // Описание может быть пустым, но не должно превышать 1000 символов
-        RuleFor(x => x.Description)
+        RuleFor(b => b.Description)
             .MaximumLength(1000)
             .WithMessage("Description cannot exceed 1000 characters");
 
         // Проверяем, что передан Id пользователя
-        RuleFor(x => x.UserId)
+        RuleFor(b => b.UserId)
             .NotEmpty()
             .WithMessage("UserId is required");
     }

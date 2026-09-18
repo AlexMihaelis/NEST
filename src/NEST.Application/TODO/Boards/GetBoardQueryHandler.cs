@@ -25,7 +25,7 @@ public class GetBoardQueryHandler
         // Преобразуем найденную сущность Board в BoardDto
         return await _context.Boards
             .AsNoTracking()
-            .Where(board => board.Id == query.BoardId)
+            .Where(b => b.Id == query.BoardId)
             .Select(board => new BoardDto(
                 board.Id,
                 board.Name,

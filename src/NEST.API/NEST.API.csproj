@@ -19,4 +19,8 @@
     <ProjectReference Include="..\NEST.Application\NEST.Application.csproj" />
     <ProjectReference Include="..\NEST.Infrastructure\NEST.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
 </Project>

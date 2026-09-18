@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NEST.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3270e3ba57ab4601a90ab0f70683c51c014b27b4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d7cce652c6db9a311d2a6733d5a8ff953e4a9fd")]
 [assembly: System.Reflection.AssemblyProductAttribute("NEST.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NEST.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
