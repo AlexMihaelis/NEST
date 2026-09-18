@@ -88,4 +88,27 @@ public class BoardsController : ControllerBase
         // Обновление прошло успешно (возвращать данные не нужно)
         return NoContent();
     }
+    
+    [HttpDelete("{boardId:guid}")]
+    public async Task<IActionResult> Delete(
+        Guid boardId,
+        CancellationToken cancellationToken)
+    {
+        // Создаем команду на удаление
+        var command = new DeleteBoardCommand(boardId);
+        
+        // Передаем команду в MediatR
+        var deleted = await _sender.Send(
+            command,
+            cancellationToken);
+        
+        // Если доска не найдена - 404
+        if (!deleted)
+        {
+            return NotFound();
+        }
+        
+        // Доска успешно удалена
+        return NoContent();
+    }
 }
