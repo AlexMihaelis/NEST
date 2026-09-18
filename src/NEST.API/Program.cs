@@ -10,19 +10,28 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSwaggerGen();
 
+// Настройка Dependency Injection (DI - внедрение зависимостей):
+// Регистрируем DbContext и подключаем PostgreSQL
 builder.Services.AddDbContext<NestDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Регистрируем интерфейс, через который Application работает с бд, и связываем его с конкретным NestDbContext
 builder.Services.AddScoped<IApplicationDbContext>(
     provider => provider.GetRequiredService<NestDbContext>());
 
+// Регистрируем MediatR и говорим ему искать Commands, Queries и Handlers в сборке NEST.Application
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(AssemblyReference).Assembly));
 
-builder.Services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
+// Регистрируем все FluentValidation-валидаторы из NEST.Application
+builder.Services.AddValidatorsFromAssembly(
+    typeof(AssemblyReference).Assembly);
 
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+// Добавляем ValidationBehavior в Pipeline MediatR, чтобы запросы проходили валидацию до вызова Handler
+builder.Services.AddTransient(
+    typeof(IPipelineBehavior<,>),
+    typeof(ValidationBehavior<,>));
 
 builder.Services.AddControllers();
 

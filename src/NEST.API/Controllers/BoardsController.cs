@@ -60,4 +60,32 @@ public class BoardsController : ControllerBase
             $"/api/boards/{boardId}",
             new { id = boardId });
     }
+
+    [HttpPut("{boardId:guid}")]
+    public async Task<IActionResult> Update(
+        Guid boardId,
+        UpdateBoardCommand command,
+        CancellationToken cancellationToken)
+    {
+        //Создаем команду для ообновления доски
+        // Id доски берем из URL, остальное - из тела запроса
+        var updateBoard = new UpdateBoardCommand(
+            boardId,
+            command.Name,
+            command.Description);
+        
+        // Передаем команду в MediatR
+        var updated = await _sender.Send(
+            updateBoard,
+            cancellationToken);
+        
+        // Если доска не найдена - 404
+        if (!updated)
+        {
+            return NotFound();
+        }
+        
+        // Обновление прошло успешно (возвращать данные не нужно)
+        return NoContent();
+    }
 }

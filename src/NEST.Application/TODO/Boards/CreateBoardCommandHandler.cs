@@ -4,7 +4,8 @@ using Board = NEST.Domain.Entities.TODO.Board;
 
 namespace NEST.Application.TODO.Boards;
 
-public class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, Guid>
+public class CreateBoardCommandHandler
+    : IRequestHandler<CreateBoardCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
 
@@ -13,8 +14,11 @@ public class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, Gui
         _context = context;
     }
 
-    public async Task<Guid> Handle(CreateBoardCommand command,  CancellationToken cancellationToken)
+    public async Task<Guid> Handle(
+        CreateBoardCommand command,
+        CancellationToken cancellationToken)
     {
+        // Создаем новую сущность Board на основе данных из команды
         var board = new Board
         {
             Id = Guid.NewGuid(),
@@ -25,10 +29,13 @@ public class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, Gui
             UpdatedAt = DateTime.UtcNow
         };
 
+        // Добавляем новую сущность в DbContext
         _context.Boards.Add(board);
 
+        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
-        
+
+        // Возвращаем Id созданной доски
         return board.Id;
     }
 }
