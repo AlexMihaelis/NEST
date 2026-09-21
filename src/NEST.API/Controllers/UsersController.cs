@@ -61,4 +61,52 @@ public class UsersController : ControllerBase
         // Если пользователь найден - HTTP 200 OK
         return Ok(user);
     }
+    
+    // GET: api/users
+    // Получаем всех пользователей
+    [HttpGet]
+    public async Task<ActionResult<List<User>>> GetAll(CancellationToken cancellationToken)
+    {
+        // Создаем Query для получения всех пользователей
+        var query = new GetUsersQuery();
+        
+        // Передаем Query в MediatR
+        // MediatR найдет GetUsersQueryHandler и запустит его
+        var users = await _sender.Send(query, cancellationToken);
+        
+        // Возвращаем HTTP 200 OK со списком пользователей
+        return Ok(users);
+    }
+    
+    // PUT: api/users/{id}
+    // Обновляем существующего пользователя
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        UpdateUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        // Создаем команду для Application-слоя
+        // Id берем из URL, а остальные данные - из тела запроса
+        var command = new UpdateUserCommand
+        {
+            Id = id,
+            UserName = request.UserName,
+            Email = request.Email,
+            BirthDate = request.BirthDate
+        };
+
+        // Передаем команду в MediatR
+        // MediatR найдет UpdateUserCommandHandler и запустит его
+        var updated = await _sender.Send(command, cancellationToken);
+
+        // Если пользователь не найден - HTTP 404 Not Found
+        if (!updated)
+        {
+            return NotFound();
+        }
+
+        // Если пользователь обновлен - HTTP 204 No Content
+        return NoContent();
+    }
 }
