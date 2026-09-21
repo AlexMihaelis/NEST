@@ -1,6 +1,7 @@
 using FluentValidation;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using System.Text.Json;
 
 namespace NEST.API.Common.Middleware;
 
@@ -45,19 +46,63 @@ public class ExceptionHandlingMiddleware
             await context.Response.WriteAsync(
                 JsonSerializer.Serialize(response));
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException exception)
         {
-            // Ошибка возникает, если операция нарушает ограничение бд (пример, пользователь связан с существующей доской)
-            context.Response.StatusCode = StatusCodes.Status409Conflict;
-            context.Response.ContentType = "application/json";
-
-            var response = new
+            // Получаем внутреннюю ошибку PostgreSQL
+            if (exception.InnerException is PostgresException postgresException)
             {
-                message = "The user cannot be deleted because it has related data."
-            };
+                // Обрабатываем попытку создать пользователя с уже существующим Email или UserName
+                if (postgresException.SqlState == "23505")
+                {
+                    context.Response.StatusCode = StatusCodes.Status409Conflict;
+                    context.Response.ContentType = "application/json";
 
-            await context.Response.WriteAsync(
-                JsonSerializer.Serialize(response));
+                    var message = postgresException.ConstraintName switch
+                    {
+                        "IX_Users_Email" =>
+                            "A user with this email already exists.",
+
+                        "IX_Users_UserName" =>
+                            "A user with this username already exists.",
+
+                        _ =>
+                            "A resource with the same unique value already exists."
+                    };
+
+                    var response = new
+                    {
+                        message
+                    };
+
+                    await context.Response.WriteAsync(
+                        JsonSerializer.Serialize(response));
+
+                    return;
+                }
+
+                // Обрабатываем попытку удалить пользователя, у которого есть связанные данные (например, доски)
+                if (postgresException.ConstraintName is
+                    "FK_Boards_Users_UserId" or
+                    "FK_Comments_Users_UserId" or
+                    "FK_Attachments_Users_UploadedByUserId")
+                {
+                    context.Response.StatusCode = StatusCodes.Status409Conflict;
+                    context.Response.ContentType = "application/json";
+
+                    var response = new
+                    {
+                        message = "The user cannot be deleted because it has related data."
+                    };
+
+                    await context.Response.WriteAsync(
+                        JsonSerializer.Serialize(response));
+
+                    return;
+                }
+            }
+
+            // Если это другая ошибка бд, которую мы пока не умеем обрабатывать, передаем исключение дальше
+            throw;
         }
     }
 }

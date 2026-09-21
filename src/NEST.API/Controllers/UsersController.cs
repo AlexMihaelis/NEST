@@ -21,6 +21,7 @@ public class UsersController : ControllerBase
     // Создаем нового пользователя
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         CreateUserCommand command,
@@ -86,7 +87,9 @@ public class UsersController : ControllerBase
     // PUT: api/users/{id}
     // Обновляем существующего пользователя
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
         Guid id,
