@@ -1,5 +1,6 @@
 using FluentValidation;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace NEST.API.Common.Middleware;
 
@@ -39,6 +40,20 @@ public class ExceptionHandlingMiddleware
             {
                 message = "Validation failed",
                 errors
+            };
+
+            await context.Response.WriteAsync(
+                JsonSerializer.Serialize(response));
+        }
+        catch (DbUpdateException)
+        {
+            // Ошибка возникает, если операция нарушает ограничение бд (пример, пользователь связан с существующей доской)
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                message = "The user cannot be deleted because it has related data."
             };
 
             await context.Response.WriteAsync(

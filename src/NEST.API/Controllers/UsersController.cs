@@ -19,6 +19,8 @@ public class UsersController : ControllerBase
     
     //POST: api/users
     // Создаем нового пользователя
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         CreateUserCommand command,
@@ -37,6 +39,8 @@ public class UsersController : ControllerBase
     
     // GET: api/users/{id}
     // Получаем пользователя по Id
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<User>> GetById(
         Guid id,
@@ -64,6 +68,7 @@ public class UsersController : ControllerBase
     
     // GET: api/users
     // Получаем всех пользователей
+    [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetAll(CancellationToken cancellationToken)
     {
@@ -80,6 +85,8 @@ public class UsersController : ControllerBase
     
     // PUT: api/users/{id}
     // Обновляем существующего пользователя
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
         Guid id,
@@ -107,6 +114,36 @@ public class UsersController : ControllerBase
         }
 
         // Если пользователь обновлен - HTTP 204 No Content
+        return NoContent();
+    }
+    
+    // DELETE: api/users/{id}
+    // Удаляем существующего пользователя
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        // Создаем команду на удаление пользователя. Id берем из URL
+        var command = new DeleteUserCommand
+        {
+            Id = id
+        };
+        
+        // Передаем команду в MediatR
+        // MediatR найдет DeleteUserCommandHandler и запустит его
+        var deleted = await _sender.Send(command, cancellationToken);
+        
+        // Если пользователь не найден - HTTP 404 Not Found
+        if (!deleted)
+        {
+            return NotFound();
+        }
+        
+        // Если пользователь удален - HTTP 204 No Content
         return NoContent();
     }
 }
