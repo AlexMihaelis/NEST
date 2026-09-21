@@ -117,7 +117,7 @@ public class NestDbContext(
         
         // Username обязателен и ограничен 50 символами
         modelBuilder.Entity<User>()
-            .Property(u => u.Username)
+            .Property(u => u.UserName)
             .IsRequired()
             .HasMaxLength(50);
         
@@ -175,7 +175,7 @@ public class NestDbContext(
         
         // Username должен быть уникальным
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Username)
+            .HasIndex(u => u.UserName)
             .IsUnique();
 
         // Enum Priority сохраняется в бд как строка, а не как числовое значение
