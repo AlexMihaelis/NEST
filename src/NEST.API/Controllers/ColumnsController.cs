@@ -76,4 +76,30 @@ public class ColumnsController : ControllerBase
 
         return Ok(columns);
     }
+    
+    // Обновление колонки
+    [HttpPut("{columnId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        Guid columnId,
+        UpdateColumnRequest request,
+        CancellationToken cancellationToken)
+    {
+        var updated = await _sender.Send(
+            new UpdateColumnCommand(
+                columnId,
+                request.Name,
+                request.Position),
+            cancellationToken);
+        
+        // Если колонка не найдена - 404
+        if (!updated)
+        {
+            return NotFound();
+        }   
+        
+        return NoContent();
+    }
 }
