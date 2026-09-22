@@ -102,4 +102,30 @@ public class ColumnsController : ControllerBase
         
         return NoContent();
     }
+    
+    // Удаление колонки
+    [HttpDelete("{columnId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        Guid columnId,
+        DeleteColumnRequest request,
+        CancellationToken cancellationToken)
+    {
+        var deleted = await _sender.Send(
+            new DeleteColumnCommand(
+                columnId,
+                request.Mode,
+                request.TargetColumnId),
+            cancellationToken);
+        
+        // Если колонка или целевая колонка не найдены - 404
+        if  (!deleted)
+        {
+            return NotFound();
+        }
+        
+        return NoContent();
+    }
 }
