@@ -85,4 +85,34 @@ public class TasksController : ControllerBase
         
         return Ok(tasks);
     }
+    
+    // Обновление существующей задачи
+    [HttpPut("{taskId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        Guid taskId,
+        UpdateTaskRequest request,
+        CancellationToken cancellationToken)
+    {
+        var updated = await _sender.Send(
+            new UpdateTaskCommand(
+                taskId,
+                request.Name,
+                request.Description,
+                request.Priority,
+                request.Deadline,
+                request.IsCompleted,
+                request.TaskContextId),
+            cancellationToken);
+    
+        // Если задача или контекст не найдены - 404
+        if (!updated)
+        {
+            return NotFound();
+        }
+    
+        return NoContent();
+    }
 }

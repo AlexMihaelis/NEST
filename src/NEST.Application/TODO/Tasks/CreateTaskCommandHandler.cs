@@ -59,7 +59,9 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid?
             TaskContextId = request.TaskContextId,
             ColumnId = request.ColumnId,
             Position = position,
-            IsCompleted = false
+            IsCompleted = false,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         _context.Tasks.Add(task);
