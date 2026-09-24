@@ -19,13 +19,11 @@ public class GetColumnsQueryHandler : IRequestHandler<GetColumnsQuery, List<Colu
         GetColumnsQuery request,
         CancellationToken cancellationToken)
     {
-        // Проверяем, существует ли доска
         var boardExists = await _context.Boards
             .AnyAsync(
                 b => b.Id == request.BoardId,
                 cancellationToken);
-
-        // Если доски нет - null
+        
         if (!boardExists)
         {
             return null;

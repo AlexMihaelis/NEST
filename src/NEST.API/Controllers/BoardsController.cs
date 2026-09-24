@@ -27,14 +27,12 @@ public class BoardsController : ControllerBase
         var board = await _sender.Send(
             new GetBoardQuery(boardId),
             cancellationToken);
-
-        // Если доска с таким ID не найдена - возвращаем 404
+        
         if (board is null)
         {
             return NotFound();
         }
         
-        // Если доска найдена — возвращаем ее данные с кодом 200.
         return Ok(board);
     }
 
@@ -60,7 +58,6 @@ public class BoardsController : ControllerBase
         // Передаем команду в MediatR, который найдет нужный Handler
         var boardId = await _sender.Send(command, cancellationToken);
         
-        // Возвращаем 201 Created и Id созданной доски
         return Created(
             $"/api/boards/{boardId}",
             new { id = boardId });
@@ -87,13 +84,11 @@ public class BoardsController : ControllerBase
             updateBoard,
             cancellationToken);
         
-        // Если доска не найдена - 404
         if (!updated)
         {
             return NotFound();
         }
         
-        // Обновление прошло успешно (возвращать данные не нужно)
         return NoContent();
     }
     
@@ -112,13 +107,11 @@ public class BoardsController : ControllerBase
             command,
             cancellationToken);
         
-        // Если доска не найдена - 404
         if (!deleted)
         {
             return NotFound();
         }
         
-        // Доска успешно удалена
         return NoContent();
     }
 }

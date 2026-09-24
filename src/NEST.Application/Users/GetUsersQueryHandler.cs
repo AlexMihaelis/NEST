@@ -20,11 +20,9 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<User>>
         GetUsersQuery request,
         CancellationToken cancellationToken)
     {
-        // Получаем всех пользователей из бд
         var users = await _context.Users
             .ToListAsync(cancellationToken);
         
-        // Возвращаем список пользователей
         return users;
     }
 }

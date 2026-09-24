@@ -26,7 +26,6 @@ public class CreateColumnCommandHandler : IRequestHandler<CreateColumnCommand, G
                 b => b.Id == request.BoardId,
                 cancellationToken);
         
-        // Если доски нет - сообщаем об этом
         if (!boardExists)
         {
             return null;
@@ -52,13 +51,10 @@ public class CreateColumnCommandHandler : IRequestHandler<CreateColumnCommand, G
             UpdatedAt = DateTime.UtcNow
         };
         
-        // Добавляем колонку в контектс EF Core
         _context.Columns.Add(column);
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
         
-        // Возвращаем Id созданной колонки
         return column.Id;
     }
 }

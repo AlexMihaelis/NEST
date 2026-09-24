@@ -9,6 +9,5 @@ namespace NEST.Application.Users;
 // В ответ Handler вернет данные пользователя
 public class GetUserByIdQuery : IRequest<User?>
 {
-    // Id пользователя, которого нужно найти
     public Guid Id { get; set; }
 }

@@ -19,11 +19,9 @@ public class DeleteColumnCommandHandler : IRequestHandler<DeleteColumnCommand, b
         DeleteColumnCommand request,
         CancellationToken cancellationToken)
     {
-        // Ищем колонку по Id
         var column = await _context.Columns
             .FirstOrDefaultAsync(c => c.Id == request.ColumnId, cancellationToken);
         
-        // если колонка не найдена - сообщаем
         if (column is null)
         {
             return false;
@@ -36,7 +34,6 @@ public class DeleteColumnCommandHandler : IRequestHandler<DeleteColumnCommand, b
             var targetColumn = await _context.Columns
                 .FirstOrDefaultAsync(c => c.Id == request.TargetColumnId, cancellationToken);
             
-            // Если целевая колонка не найдена - сообщаем
             if (targetColumn is null)
             {
                 return false;
@@ -53,10 +50,8 @@ public class DeleteColumnCommandHandler : IRequestHandler<DeleteColumnCommand, b
                 task.ColumnId = targetColumn.Id;
             }
         }
-        // Удаляем исходную колонку
         _context.Columns.Remove(column);
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
         
         return true;

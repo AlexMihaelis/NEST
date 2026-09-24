@@ -20,14 +20,11 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User?>
         GetUserByIdQuery request,
         CancellationToken cancellationToken)
     {
-        // Ищем пользователя по Id
-        // Если прользователь не найден, FirstOrDefaultAsync вернет null
         var user = await _context.Users
             .FirstOrDefaultAsync(
                 u => u.Id == request.Id,
                 cancellationToken);
         
-        // Возвращаем найденного пользователя или null
         return user;
     }
 }

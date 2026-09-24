@@ -29,13 +29,10 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
             CreatedAt = DateTime.UtcNow
         };
         
-        // Добавляем нового пользователя в контекст EF Core
         _context.Users.Add(user);
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
         
-        // Возвращаем Id созданного пользователя
         return user.Id;
     }
 }

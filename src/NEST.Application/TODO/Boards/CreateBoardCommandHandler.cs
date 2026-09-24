@@ -28,14 +28,11 @@ public class CreateBoardCommandHandler
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
-
-        // Добавляем новую сущность в DbContext
+        
         _context.Boards.Add(board);
-
-        // Сохраняем изменения в бд
+        
         await _context.SaveChangesAsync(cancellationToken);
-
-        // Возвращаем Id созданной доски
+        
         return board.Id;
     }
 }

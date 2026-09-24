@@ -11,7 +11,6 @@ public class NestDbContext(
     DbContextOptions<NestDbContext> options)
     : DbContext(options), IApplicationDbContext
 {
-    // DbSet представляет таблицу в бд
     public DbSet<User> Users { get; set; }
     
     public DbSet<Task> Tasks { get; set; }

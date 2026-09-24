@@ -19,26 +19,21 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, bool>
         UpdateUserCommand request,
         CancellationToken cancellationToken)
     {
-        // Ищем пользователя по Id
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Id == request.Id,
                 cancellationToken);
         
-        // Если пользователь не найден - сообщаем об этом
         if (user is null)
         {
             return false;
         }
         
-        // Обновляем данные найденного пользователя
         user.UserName = request.UserName;
         user.Email = request.Email;
         user.BirthDate = request.BirthDate;
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
-
-        // Сообщаем, что пользователь успешно обновлен
+        
         return true;
     }
 }

@@ -17,8 +17,6 @@ public class UsersController : ControllerBase
         _sender = sender;
     }
     
-    //POST: api/users
-    // Создаем нового пользователя
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -27,19 +25,15 @@ public class UsersController : ControllerBase
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
-        // Передаем команду в MediatR
-        // MediatR найдет подходящий Handler и запустит его 
+        // Передаем команду в MediatR. Он найдет подходящий Handler и запустит его 
         var userId = await _sender.Send(command, cancellationToken);
         
-        // Возвращаем HTTP 201 Created и Id созданного пользователя
         return CreatedAtAction(
             nameof(GetById),
             new { id = userId },
             userId);
     }
     
-    // GET: api/users/{id}
-    // Получаем пользователя по Id
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id:guid}")]
@@ -53,22 +47,17 @@ public class UsersController : ControllerBase
             Id = id
         };
         
-        // Передаем Query в MediatR
-        // MediatR найдет GetUserByIdQueryHandler и запустит его
+        // Передаем Query в MediatR. Он найдет GetUserByIdQueryHandler и запустит его
         var user = await _sender.Send(query, cancellationToken);
         
-        // Если пользователь не найден - HTTP 404 Not Found
         if  (user is null)
         {
             return NotFound();
         }
         
-        // Если пользователь найден - HTTP 200 OK
         return Ok(user);
     }
     
-    // GET: api/users
-    // Получаем всех пользователей
     [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetAll(CancellationToken cancellationToken)
@@ -76,16 +65,12 @@ public class UsersController : ControllerBase
         // Создаем Query для получения всех пользователей
         var query = new GetUsersQuery();
         
-        // Передаем Query в MediatR
-        // MediatR найдет GetUsersQueryHandler и запустит его
+        // Передаем Query в Mediat. Он найдет GetUsersQueryHandler и запустит его
         var users = await _sender.Send(query, cancellationToken);
         
-        // Возвращаем HTTP 200 OK со списком пользователей
         return Ok(users);
     }
     
-    // PUT: api/users/{id}
-    // Обновляем существующего пользователя
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -96,8 +81,7 @@ public class UsersController : ControllerBase
         UpdateUserRequest request,
         CancellationToken cancellationToken)
     {
-        // Создаем команду для Application-слоя
-        // Id берем из URL, а остальные данные - из тела запроса
+        // Создаем команду для Application-слоя. Id берем из URL, а остальные данные - из тела запроса
         var command = new UpdateUserCommand
         {
             Id = id,
@@ -106,22 +90,17 @@ public class UsersController : ControllerBase
             BirthDate = request.BirthDate
         };
 
-        // Передаем команду в MediatR
-        // MediatR найдет UpdateUserCommandHandler и запустит его
+        // Передаем команду в MediatR. Он найдет UpdateUserCommandHandler и запустит его
         var updated = await _sender.Send(command, cancellationToken);
-
-        // Если пользователь не найден - HTTP 404 Not Found
+        
         if (!updated)
         {
             return NotFound();
         }
-
-        // Если пользователь обновлен - HTTP 204 No Content
+        
         return NoContent();
     }
     
-    // DELETE: api/users/{id}
-    // Удаляем существующего пользователя
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -136,17 +115,14 @@ public class UsersController : ControllerBase
             Id = id
         };
         
-        // Передаем команду в MediatR
-        // MediatR найдет DeleteUserCommandHandler и запустит его
+        // Передаем команду в MediatR. Он найдет DeleteUserCommandHandler и запустит его
         var deleted = await _sender.Send(command, cancellationToken);
         
-        // Если пользователь не найден - HTTP 404 Not Found
         if (!deleted)
         {
             return NotFound();
         }
         
-        // Если пользователь удален - HTTP 204 No Content
         return NoContent();
     }
 }

@@ -8,14 +8,14 @@ namespace NEST.API.Controllers;
 [Route("api/[controller]")]
 public class ColumnsController : ControllerBase
 {
+    // ISender позволяет отправлять команды и запросы через MediatR
     private readonly ISender _sender;
     
     public ColumnsController(ISender sender)
     {
         _sender = sender;
     }
-
-    // Создание новой колонки
+    
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -26,7 +26,6 @@ public class ColumnsController : ControllerBase
     {
         var columnId = await _sender.Send(command, cancellationToken);
         
-        // Если доска не найена - null
         if (columnId is null)
         {
             return NotFound();
@@ -35,7 +34,6 @@ public class ColumnsController : ControllerBase
         return Created($"api/columns/{columnId}", new {id = columnId});
     }
     
-    // Получение колонки по Id
     [HttpGet("{columnId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,7 +45,6 @@ public class ColumnsController : ControllerBase
             new GetColumnQuery(columnId),
             cancellationToken);
         
-        // Если колонка не найдена - 404
         if (column is null)
         {
             return NotFound();
@@ -56,7 +53,6 @@ public class ColumnsController : ControllerBase
         return Ok(column);
     }
     
-    // Получение всех колонок у доски
     [HttpGet("/api/boards/{boardId:guid}/columns")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,8 +63,7 @@ public class ColumnsController : ControllerBase
         var columns = await _sender.Send(
             new GetColumnsQuery(boardId),
             cancellationToken);
-
-        // Если доска не найдена - 404
+        
         if (columns is null)
         {
             return NotFound();
@@ -77,7 +72,6 @@ public class ColumnsController : ControllerBase
         return Ok(columns);
     }
     
-    // Обновление колонки
     [HttpPut("{columnId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -94,7 +88,6 @@ public class ColumnsController : ControllerBase
                 request.Position),
             cancellationToken);
         
-        // Если колонка не найдена - 404
         if (!updated)
         {
             return NotFound();
@@ -103,7 +96,6 @@ public class ColumnsController : ControllerBase
         return NoContent();
     }
     
-    // Удаление колонки
     [HttpDelete("{columnId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -120,7 +112,6 @@ public class ColumnsController : ControllerBase
                 request.TargetColumnId),
             cancellationToken);
         
-        // Если колонка или целевая колонка не найдены - 404
         if  (!deleted)
         {
             return NotFound();
