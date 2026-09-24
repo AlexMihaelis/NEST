@@ -115,4 +115,25 @@ public class TasksController : ControllerBase
     
         return NoContent();
     }
+    
+    // Удаление существующей задачи
+    [HttpDelete("{taskId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        Guid taskId,
+        CancellationToken cancellationToken)
+    {
+        var deleted = await _sender.Send(
+            new DeleteTaskCommand(taskId),
+            cancellationToken);
+        
+        // Если задача не найдена - 404
+        if (!deleted)
+        {
+            return NotFound();
+        }
+        
+        return NoContent();
+    }
 }
