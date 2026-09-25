@@ -12,6 +12,9 @@ public class Task
     public DateTime? Deadline { get; set; }
     public bool IsCompleted { get; set; }
     
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    
     public Guid? TaskContextId { get; set; }
     public TaskContext? TaskContext { get; set; }
     
