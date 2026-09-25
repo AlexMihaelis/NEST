@@ -35,14 +35,14 @@ public class TasksController : ControllerBase
                 request.ColumnId),
             cancellationToken);
         
-        // Если колонка или котекст не найдены - 404
+        // Если колонка или контекст не найдены - 404
         if (taskId is null)
         {
             return NotFound();
         }
         
         //return Created(nameof(Get), new {taskId}, null);
-        return Created($"api/tasks/{taskId}", new {taskId});
+        return Created($"/api/tasks/{taskId}", new { taskId });
     }
     
     // Получение задачи по Id
