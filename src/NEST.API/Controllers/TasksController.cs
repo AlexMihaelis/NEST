@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NEST.API.Controllers.Requests;
 using NEST.Application.TODO.Tasks;
 
 namespace NEST.API.Controllers;
@@ -134,6 +135,32 @@ public class TasksController : ControllerBase
             return NotFound();
         }
         
+        return NoContent();
+    }
+    
+    // Перемещение задачи в другую позицию/колонку
+    [HttpPut("{taskId:guid}/move")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Move(
+        Guid taskId,
+        MoveTaskRequest request,
+        CancellationToken cancellationToken)
+    {
+        var moved = await _sender.Send(
+            new MoveTaskCommand(
+                taskId,
+                request.TargetColumnId,
+                request.TargetPosition),
+            cancellationToken);
+
+        // Если задача или целевая колонка не найдены - 404
+        if (!moved)
+        {
+            return NotFound();
+        }
+
         return NoContent();
     }
 }
