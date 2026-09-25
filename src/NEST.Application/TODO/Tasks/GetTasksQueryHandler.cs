@@ -18,11 +18,9 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, List<Task>?>
         GetTasksQuery request,
         CancellationToken cancellationToken)
     {
-        // Поверяем, существует ли колонка
         var columnExists = await _context.Columns
             .AnyAsync(c => c.Id == request.ColumnId, cancellationToken);
         
-        // Если колонка не найдена - null
         if (!columnExists)
         {
             return null;

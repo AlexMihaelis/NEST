@@ -19,7 +19,6 @@ public class GetColumnQueryHandler : IRequestHandler<GetTaskQuery, Task?>
         GetTaskQuery request,
         CancellationToken cancellationToken)
     {
-        // Ищем задачу по Id. Если не найдена - null
         return await  _context.Tasks
             .FirstOrDefaultAsync(t => t.Id == request.TaskId, 
                 cancellationToken);

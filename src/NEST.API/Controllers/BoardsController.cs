@@ -58,9 +58,7 @@ public class BoardsController : ControllerBase
         // Передаем команду в MediatR, который найдет нужный Handler
         var boardId = await _sender.Send(command, cancellationToken);
         
-        return Created(
-            $"/api/boards/{boardId}",
-            new { id = boardId });
+        return CreatedAtAction(nameof(Get), new { boardId }, new { id = boardId });
     }
 
     [HttpPut("{boardId:guid}")]
@@ -72,8 +70,7 @@ public class BoardsController : ControllerBase
         UpdateBoardCommand command,
         CancellationToken cancellationToken)
     {
-        // Создаем команду для обновления доски.
-        // Id доски берем из URL, остальное - из тела запроса
+        // Создаем команду для обновления доски. Id доски берем из URL, остальное - из тела запроса
         var updateBoard = new UpdateBoardCommand(
             boardId,
             command.Name,

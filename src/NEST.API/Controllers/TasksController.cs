@@ -16,7 +16,6 @@ public class TasksController : ControllerBase
         _sender = sender;
     }
     
-    // Создание новой задачи
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,17 +34,15 @@ public class TasksController : ControllerBase
                 request.ColumnId),
             cancellationToken);
         
-        // Если колонка или контекст не найдены - 404
         if (taskId is null)
         {
             return NotFound();
         }
-        
-        //return Created(nameof(Get), new {taskId}, null);
-        return Created($"/api/tasks/{taskId}", new { taskId });
+    
+        return CreatedAtAction(
+            nameof(Get), new { taskId }, new { taskId });
     }
     
-    // Получение задачи по Id
     [HttpGet("{taskId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -57,7 +54,6 @@ public class TasksController : ControllerBase
             new GetTaskQuery(taskId),
             cancellationToken);
         
-        // Если задача не найдена - 404
         if (task is null)
         {
             return NotFound();
@@ -66,7 +62,6 @@ public class TasksController : ControllerBase
         return Ok(task);
     }
     
-    // Получение всех задач колонки
     [HttpGet("/api/columns/{columnId:guid}/tasks")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -78,7 +73,6 @@ public class TasksController : ControllerBase
             new GetTasksQuery(columnId),
             cancellationToken);
         
-        // Если колонка не найдена - 404
         if (tasks is null)
         {
             return NotFound();
@@ -87,7 +81,6 @@ public class TasksController : ControllerBase
         return Ok(tasks);
     }
     
-    // Обновление существующей задачи
     [HttpPut("{taskId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -107,8 +100,7 @@ public class TasksController : ControllerBase
                 request.IsCompleted,
                 request.TaskContextId),
             cancellationToken);
-    
-        // Если задача или контекст не найдены - 404
+        
         if (!updated)
         {
             return NotFound();
@@ -117,7 +109,6 @@ public class TasksController : ControllerBase
         return NoContent();
     }
     
-    // Удаление существующей задачи
     [HttpDelete("{taskId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -129,7 +120,6 @@ public class TasksController : ControllerBase
             new DeleteTaskCommand(taskId),
             cancellationToken);
         
-        // Если задача не найдена - 404
         if (!deleted)
         {
             return NotFound();
@@ -154,8 +144,7 @@ public class TasksController : ControllerBase
                 request.TargetColumnId,
                 request.TargetPosition),
             cancellationToken);
-
-        // Если задача или целевая колонка не найдены - 404
+        
         if (!moved)
         {
             return NotFound();

@@ -19,21 +19,17 @@ public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, bool>
         DeleteTaskCommand request,
         CancellationToken cancellationToken)
     {
-        // Ищем задачу по Id
         var task = await _context.Tasks
             .FirstOrDefaultAsync(t => t.Id == request.TaskId, cancellationToken);
         
-        // Если задача не найдена - false
         if (task is null)
         {
             return false;
         }
         
-        // Запоминаем колонку и позицию удаляемой задачи
         var columnId = task.ColumnId;
         var position = task.Position;
         
-        // Удаляем задачу
         _context.Tasks.Remove(task);
         
         // Сдвигаем позиции следующих задач наверх
@@ -46,7 +42,6 @@ public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand, bool>
             taskToShift.Position--;
         }
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }

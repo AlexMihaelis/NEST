@@ -20,13 +20,11 @@ public class MoveTaskCommandHandler
         MoveTaskCommand request,
         CancellationToken cancellationToken)
     {
-        // Ищем задачу по Id
         var task = await _context.Tasks
             .FirstOrDefaultAsync(
                 t => t.Id == request.TaskId,
                 cancellationToken);
-
-        // Если задача не найдена - false
+        
         if (task is null)
         {
             return false;
@@ -37,8 +35,7 @@ public class MoveTaskCommandHandler
             .AnyAsync(
                 c => c.Id == request.TargetColumnId,
                 cancellationToken);
-
-        // Если колонка не найдена - false
+        
         if (!targetColumnExists)
         {
             return false;
@@ -48,6 +45,7 @@ public class MoveTaskCommandHandler
         var oldPosition = task.Position;
 
         // Перемещение внутри той же колонки
+        // else: Перемещение в другую колонку
         if (oldColumnId == request.TargetColumnId)
         {
             // Если задача остаётся на том же месте - ничего менять не нужно
@@ -91,7 +89,6 @@ public class MoveTaskCommandHandler
 
             task.Position = request.TargetPosition;
         }
-        // Перемещение в другую колонку
         else
         {
             // Освобождаем позицию в старой колонке
@@ -128,11 +125,9 @@ public class MoveTaskCommandHandler
             task.ColumnId = request.TargetColumnId;
             task.Position = targetPosition;
         }
-
-        // Обновляем время последнего изменения
+        
         task.UpdatedAt = DateTime.UtcNow;
-
-        // Сохраняем изменения в БД
+        
         await _context.SaveChangesAsync(cancellationToken);
 
         return true;

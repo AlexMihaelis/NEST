@@ -19,7 +19,6 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid?
         CreateTaskCommand request,
         CancellationToken cancellationToken)
     {
-        // Проверяем, существует ли колонка
         var columnExists = await _context.Columns
             .AnyAsync(c => c.Id == request.ColumnId, cancellationToken);
 
@@ -27,8 +26,7 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid?
         {
             return null;
         }
-
-        // Если указан контекст, проверяем, существует ли он
+        
         if (request.TaskContextId.HasValue)
         {
             var taskContextExists = await _context.TaskContexts
@@ -65,8 +63,7 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid?
         };
 
         _context.Tasks.Add(task);
-
-        // Сохраняем задачу в БД
+        
         await _context.SaveChangesAsync(cancellationToken);
 
         return task.Id;

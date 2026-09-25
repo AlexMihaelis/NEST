@@ -18,10 +18,8 @@ public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
         UpdateTaskCommand request,
         CancellationToken cancellationToken)
     {
-        // Ищем задачу по Id
         var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == request.TaskId, cancellationToken);
         
-        // Если задача не найдена - сообщаем
         if (task is null)
         {
             return false;
@@ -33,14 +31,12 @@ public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
             var taskContextExists = await _context.TaskContexts
                 .AnyAsync(tc => tc.Id == request.TaskContextId.Value, cancellationToken);
             
-            // Если контекст не найден - сообщаем
             if (!taskContextExists)
             {
                 return false;
             }
         }
         
-        // Обновляем данные задачи
         task.Name = request.Name;
         task.Description = request.Description;
         task.Priority = request.Priority;
@@ -49,7 +45,6 @@ public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand, bool>
         task.TaskContextId = request.TaskContextId;
         task.UpdatedAt = DateTime.UtcNow;
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
         
         return true;
