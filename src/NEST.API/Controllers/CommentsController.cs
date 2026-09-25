@@ -79,4 +79,29 @@ public class CommentsController : ControllerBase
         
         return Ok(comments);
     }
+    
+    // Обновление существующего комментария
+    [HttpPut("{commentId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        Guid commentId,
+        UpdateCommentRequest request,
+        CancellationToken cancellationToken)
+    {
+        var updated = await _sender.Send(
+            new UpdateCommentCommand(
+                commentId,
+                request.Content),
+            cancellationToken);
+        
+        // Если комментарий не найден - 404
+        if (!updated)
+        {
+            return NotFound();
+        }
+        
+        return NoContent();
+    }
 }
