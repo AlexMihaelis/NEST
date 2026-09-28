@@ -7,7 +7,7 @@ public class CreateCommentCommandValidator : AbstractValidator<CreateCommentComm
 {
     public CreateCommentCommandValidator()
     {
-        // текст комментария обязателен и не должен превышать 2000 символов
+        // Текст комментария обязателен и не должен превышать 2000 символов
         RuleFor(c => c.Content)
             .NotEmpty()
             .MaximumLength(2000);

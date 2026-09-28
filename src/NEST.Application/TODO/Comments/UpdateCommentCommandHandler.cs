@@ -16,22 +16,18 @@ public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand,
 
     public async Task<bool> Handle(UpdateCommentCommand request, CancellationToken cancellationToken)
     {
-        // Ищем комментарий по Id
         var comment = await _context.Comments
             .FirstOrDefaultAsync(c => c.Id == request.CommentId,
                 cancellationToken);
         
-        // Если комментарий не найден - false
         if (comment is null)
         {
             return false;
         }
         
-        // Обновляем текст комментария
         comment.Content  = request.Content;
         comment.UpdatedAt = DateTime.UtcNow;
         
-        // Сохраняем изменения в бд
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }

@@ -18,21 +18,17 @@ public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand,
         DeleteCommentCommand request,
         CancellationToken cancellationToken)
     {
-        // Ищем комментарий по Id
         var comment = await _context.Comments.FirstOrDefaultAsync(
             c => c.Id == request.CommentId,
             cancellationToken);
-
-        // Если комментарий не найден - возвращаем false
+        
         if (comment is null)
         {
             return false;
         }
-
-        // Удаляем комментарий
+        
         _context.Comments.Remove(comment);
-
-        // Сохраняем изменения в БД
+        
         await _context.SaveChangesAsync(cancellationToken);
 
         return true;

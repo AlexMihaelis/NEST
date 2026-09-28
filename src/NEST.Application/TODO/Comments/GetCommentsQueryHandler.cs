@@ -20,19 +20,14 @@ public class GetCommentsQueryHandler
         GetCommentsQuery request,
         CancellationToken cancellationToken)
     {
-        // Проверяем, существует ли задача
         var taskExists = await _context.Tasks
-            .AnyAsync(
-                t => t.Id == request.TaskId,
-                cancellationToken);
-
-        // Если задача не найдена - null
+            .AnyAsync(t => t.Id == request.TaskId, cancellationToken);
+        
         if (!taskExists)
         {
             return null;
         }
-
-        // Получаем комментарии задачи
+        
         return await _context.Comments
             .Where(c => c.TaskId == request.TaskId)
             .OrderBy(c => c.CreatedAt)

@@ -16,7 +16,6 @@ public class CommentsController : ControllerBase
         _sender = sender;
     }
     
-    // Создание нового комментария
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -30,7 +29,6 @@ public class CommentsController : ControllerBase
                 request.UserId),
             cancellationToken);
         
-        // Если задача или пользователь не найден - 404
         if (commentId is null)
         {
             return NotFound();
@@ -39,7 +37,6 @@ public class CommentsController : ControllerBase
         return CreatedAtAction(nameof(Get), new { commentId }, new { commentId });
     }
     
-    // Получение комментария по Id
     [HttpGet("{commentId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,8 +47,7 @@ public class CommentsController : ControllerBase
         var comment = await _sender.Send(
             new GetCommentQuery(commentId),
             cancellationToken);
-
-        // Если комментарий не найден - 404
+        
         if (comment is null)
         {
             return NotFound();
@@ -60,7 +56,6 @@ public class CommentsController : ControllerBase
         return Ok(comment);
     }
     
-    // Получение всех комментариев задачи
     [HttpGet("/api/tasks/{taskId:guid}/comments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,7 +66,6 @@ public class CommentsController : ControllerBase
         var comments = await _sender.Send(
             new GetCommentsQuery(taskId), cancellationToken);
         
-        // Если задача не найдена - 404
         if (comments is null)
         {
             return NotFound();
@@ -80,7 +74,6 @@ public class CommentsController : ControllerBase
         return Ok(comments);
     }
     
-    // Обновление существующего комментария
     [HttpPut("{commentId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,7 +89,6 @@ public class CommentsController : ControllerBase
                 request.Content),
             cancellationToken);
         
-        // Если комментарий не найден - 404
         if (!updated)
         {
             return NotFound();
@@ -105,7 +97,6 @@ public class CommentsController : ControllerBase
         return NoContent();
     }
     
-    // Удаление существующего комментария
     [HttpDelete("{commentId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -117,8 +108,7 @@ public class CommentsController : ControllerBase
         var deleted = await _sender.Send(
             new DeleteCommentCommand(commentId),
             cancellationToken);
-
-        // Если комментарий не найден - 404
+        
         if (!deleted)
         {
             return NotFound();

@@ -20,31 +20,22 @@ public class CreateCommentCommandHandler
         CreateCommentCommand request,
         CancellationToken cancellationToken)
     {
-        // Проверяем, существует ли задача
         var taskExists = await _context.Tasks
-            .AnyAsync(
-                t => t.Id == request.TaskId,
-                cancellationToken);
-
-        // Если задача не найдена - null
+            .AnyAsync(t => t.Id == request.TaskId, cancellationToken);
+        
         if (!taskExists)
         {
             return null;
         }
-
-        // Проверяем, существует ли пользователь
+        
         var userExists = await _context.Users
-            .AnyAsync(
-                u => u.Id == request.UserId,
-                cancellationToken);
-
-        // Если пользователь не найден - null
+            .AnyAsync(u => u.Id == request.UserId, cancellationToken);
+        
         if (!userExists)
         {
             return null;
         }
-
-        // Создаем новый комментарий
+        
         var comment = new Comment
         {
             Id = Guid.NewGuid(),
@@ -56,8 +47,7 @@ public class CreateCommentCommandHandler
         };
 
         _context.Comments.Add(comment);
-
-        // Сохраняем комментарий в бд
+        
         await _context.SaveChangesAsync(cancellationToken);
 
         return comment.Id;

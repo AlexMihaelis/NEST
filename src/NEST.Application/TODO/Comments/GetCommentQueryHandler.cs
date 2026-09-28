@@ -20,11 +20,7 @@ public class GetCommentQueryHandler
         GetCommentQuery request,
         CancellationToken cancellationToken)
     {
-        // Ищем комментарий по Id
-        // Если комментарий не найден - возвращаем null
         return await _context.Comments
-            .FirstOrDefaultAsync(
-                c => c.Id == request.CommentId,
-                cancellationToken);
+            .FirstOrDefaultAsync(c => c.Id == request.CommentId, cancellationToken);
     }
 }
