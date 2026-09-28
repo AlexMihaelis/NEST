@@ -104,4 +104,26 @@ public class CommentsController : ControllerBase
         
         return NoContent();
     }
+    
+    // Удаление существующего комментария
+    [HttpDelete("{commentId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        Guid commentId,
+        CancellationToken cancellationToken)
+    {
+        var deleted = await _sender.Send(
+            new DeleteCommentCommand(commentId),
+            cancellationToken);
+
+        // Если комментарий не найден - 404
+        if (!deleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
 }
