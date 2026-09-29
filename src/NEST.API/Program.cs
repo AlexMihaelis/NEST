@@ -2,11 +2,13 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Minio;
 using NEST.API.Common.Middleware;
 using NEST.Application;
 using NEST.Application.Common.Behaviors;
 using NEST.Application.Common.Interfaces;
 using NEST.Infrastructure.Data;
+using NEST.Infrastructure.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +21,7 @@ builder.Services.AddDbContext<NestDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Регистрируем интерфейс, через который Application работает с бд, и связываем его с конкретным NestDbContext
-builder.Services.AddScoped<IApplicationDbContext>(
-    provider => provider.GetRequiredService<NestDbContext>());
+builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<NestDbContext>());
 
 // Регистрируем MediatR и говорим ему искать Commands, Queries и Handlers в сборке NEST.Application
 builder.Services.AddMediatR(cfg =>
@@ -35,6 +36,27 @@ builder.Services.AddTransient(
     typeof(IPipelineBehavior<,>),
     typeof(ValidationBehavior<,>));
 
+// Регистрируем настройки MinIO из конфигурации приложения
+builder.Services
+    .AddOptions<MinioOptions>()
+    .Bind(builder.Configuration.GetSection("Minio"))
+    .ValidateOnStart();
+
+// Регистрируем MinIO client и настраиваем подключение к локальному MinIO
+builder.Services.AddMinio(client =>
+    client
+        .WithEndpoint(builder.Configuration["Minio:Endpoint"]!)
+        .WithCredentials(
+            builder.Configuration["Minio:AccessKey"]!,
+            builder.Configuration["Minio:SecretKey"]!)
+        .WithSSL(false));
+
+// Регистрируем реализацию IFileStorage для работы с MinIO
+builder.Services.AddScoped<IFileStorage, MinioFileStorage>();
+
+// Регистрируем сервис инициализации bucket в MinIO
+builder.Services.AddScoped<MinioBucketInitializer>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -44,6 +66,15 @@ builder.Services.AddControllers()
     });
 
 var app = builder.Build();
+
+// Создаем необходимый bucket в MinIO при запуске приложения
+using (var scope = app.Services.CreateScope())
+{
+    var bucketInitializer = scope.ServiceProvider
+        .GetRequiredService<MinioBucketInitializer>();
+
+    await bucketInitializer.InitializeAsync();
+}
 
 // Подключаем middleware для обработки ошибок валидации
 // Он должен находиться перед контроллерами, чтобы перехватывать исключения, возникающие в следующих компонентах Pipeline
