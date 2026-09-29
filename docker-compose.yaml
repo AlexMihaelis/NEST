@@ -1,0 +1,29 @@
+services:
+
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: nest
+      POSTGRES_PASSWORD: nest_password
+      POSTGRES_DB: nest
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+
+  minio:
+    image: quay.io/minio/aistor/minio:RELEASE.2026-09-19T17-05-25Z
+    environment:
+      MINIO_ROOT_USER: nest
+      MINIO_ROOT_PASSWORD: nest_password
+    volumes:
+      - minio_data:/data
+      - ./minio/minio.license:/minio.license:ro
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001" --license /minio.license
+
+volumes:
+  postgres_data:
+  minio_data:
