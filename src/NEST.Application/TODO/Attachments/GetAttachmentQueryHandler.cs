@@ -24,7 +24,6 @@ public class GetAttachmentQueryHandler : IRequestHandler<GetAttachmentQuery, Att
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
         
-        // Если записи о файле нет - null
         if (attachment is null)
         {
             return null;

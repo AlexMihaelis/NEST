@@ -28,19 +28,17 @@ public class DeleteAttachmentCommandHandler
             .FirstOrDefaultAsync(
                 a => a.Id == request.Id,
                 cancellationToken);
-
-        // Если Attachment не найден - сообщаем
+        
         if (attachment is null)
         {
             return false;
         }
 
-        // Сначала удаляем сам файл из MinIO
+        // Удаляем сам файл из MinIO
         await _fileStorage.DeleteAsync(
             attachment.StorageKey,
             cancellationToken);
-
-        // После успешного удаления файла удаляем его метаданные из бд
+        
         _context.Attachments.Remove(attachment);
 
         await _context.SaveChangesAsync(cancellationToken);

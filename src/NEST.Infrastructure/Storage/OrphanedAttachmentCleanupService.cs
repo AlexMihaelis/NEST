@@ -57,12 +57,11 @@ public class OrphanedAttachmentCleanupService : BackgroundService
 
         foreach (var attachment in attachments)
         {
-            // Сначала удаляем файл из MinIO
+            // Удаляем файл из MinIO
             await fileStorage.DeleteAsync(
                 attachment.StorageKey,
                 cancellationToken);
-
-            // После успешного удаления файла удаляем его запись из бд
+            
             context.Attachments.Remove(attachment);
         }
 
