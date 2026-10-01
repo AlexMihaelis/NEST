@@ -9,11 +9,11 @@ namespace NEST.API.Controllers;
 [Route("api/[controller]")]
 public class AttachmentsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public AttachmentsController(IMediator mediator)
+    public AttachmentsController(ISender sender)
     {
-        _mediator = mediator;
+        _sender = sender;
     }
 
     // Загружает файл и передает его в Application-слой для обработки
@@ -42,7 +42,7 @@ public class AttachmentsController : ControllerBase
         };
 
         // Передаем команду MediatR, который найдет соответствующий Handler
-        var attachmentId = await _mediator.Send(command, cancellationToken);
+        var attachmentId = await _sender.Send(command, cancellationToken);
 
         // Возвращаем Id созданного Attachment и статус 201 Created 
         return CreatedAtAction(
@@ -58,7 +58,7 @@ public class AttachmentsController : ControllerBase
         CancellationToken cancellationToken)
     {
         // Получаем файл через Application-слой
-        var attachment = await _mediator.Send(
+        var attachment = await _sender.Send(
             new GetAttachmentQuery { Id = id },
             cancellationToken);
 
@@ -73,5 +73,25 @@ public class AttachmentsController : ControllerBase
             attachment.FileStream,
             attachment.ContentType,
             attachment.FileName);
+    }
+    
+    // Удаляет Attachment и соответствющий файл из хранилища
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    {
+        // Передаем команду на удаление в Application-слой
+        var deleted = await _sender.Send(
+            new DeleteAttachmentCommand(id),
+            cancellationToken);
+        
+        // Если Attachment не найден - 404
+        if (!deleted)
+        {
+            return NotFound();
+        }
+        
+        return NoContent();
     }
 }
