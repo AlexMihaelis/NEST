@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NEST.API.Controllers.Requests.Columns;
 using NEST.Application.TODO.Columns;
 
 namespace NEST.API.Controllers;

@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using NEST.API.Controllers.Requests;
+using NEST.API.Controllers.Requests.Comments;
 using NEST.Application.TODO.Comments;
 
 namespace NEST.API.Controllers;

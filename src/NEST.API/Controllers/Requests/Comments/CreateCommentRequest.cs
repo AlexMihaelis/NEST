@@ -1,4 +1,4 @@
-namespace NEST.API.Controllers.Requests;
+namespace NEST.API.Controllers.Requests.Comments;
 
 // Данные, которые клиент передает для создания комментария
 public class CreateCommentRequest

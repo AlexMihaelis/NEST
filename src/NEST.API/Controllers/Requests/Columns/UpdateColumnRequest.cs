@@ -1,4 +1,4 @@
-namespace NEST.Application.TODO.Columns;
+namespace NEST.API.Controllers.Requests.Columns;
 
 public class UpdateColumnRequest
 {

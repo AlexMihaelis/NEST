@@ -1,4 +1,4 @@
-namespace NEST.API.Controllers.Requests;
+namespace NEST.API.Controllers.Requests.Tasks;
 
 // Данные, которые клиент передает для перемещения задачи
 public class MoveTaskRequest

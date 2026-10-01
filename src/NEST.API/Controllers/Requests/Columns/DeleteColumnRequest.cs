@@ -1,6 +1,6 @@
 using NEST.Domain.Enums;
 
-namespace NEST.Application.TODO.Columns;
+namespace NEST.API.Controllers.Requests.Columns;
 
 // Данные, которые клиент передает для удаления колонки
 public class DeleteColumnRequest
