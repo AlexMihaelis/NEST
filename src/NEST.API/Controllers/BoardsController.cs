@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NEST.API.Controllers.Requests.Boards;
 using NEST.Application.TODO.Boards;
 
 namespace NEST.API.Controllers;
