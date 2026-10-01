@@ -67,25 +67,25 @@ public class BoardsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(
         Guid boardId,
-        UpdateBoardCommand command,
+        UpdateBoardRequest request,
         CancellationToken cancellationToken)
     {
-        // Создаем команду для обновления доски. Id доски берем из URL, остальное - из тела запроса
-        var updateBoard = new UpdateBoardCommand(
+        // Преобразуем HTTP-модель в Application-команду
+        var command = new UpdateBoardCommand(
             boardId,
-            command.Name,
-            command.Description);
-        
+            request.Name,
+            request.Description);
+
         // Передаем команду в MediatR
         var updated = await _sender.Send(
-            updateBoard,
+            command,
             cancellationToken);
-        
+
         if (!updated)
         {
             return NotFound();
         }
-        
+
         return NoContent();
     }
     
