@@ -50,4 +50,28 @@ public class AttachmentsController : ControllerBase
             new { id = attachmentId },
             new { id = attachmentId });
     }
+    
+    // Возвращает файл Attachment по его идентификатору
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        // Получаем файл через Application-слой
+        var attachment = await _mediator.Send(
+            new GetAttachmentQuery { Id = id },
+            cancellationToken);
+
+        // Если Attachment с таким ID не найден - 404
+        if (attachment is null)
+        {
+            return NotFound();
+        }
+
+        // File() формирует HTTP-ответ с содержимым файла, его MIME-типом и исходным именем
+        return File(
+            attachment.FileStream,
+            attachment.ContentType,
+            attachment.FileName);
+    }
 }
