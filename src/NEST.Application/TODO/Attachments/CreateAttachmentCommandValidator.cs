@@ -32,5 +32,10 @@ public class CreateAttachmentCommandValidator : AbstractValidator<CreateAttachme
         RuleFor(a => a.ContentType)
             .NotEmpty()
             .MaximumLength(100);
+        
+        // Должен быть обязательно указан хотя бы TaskId или CommentId
+        RuleFor(a => a)
+            .Must(a => a.TaskId.HasValue || a.CommentId.HasValue)
+            .WithMessage("TaskId or CommentId must be specified.");
     }
 }

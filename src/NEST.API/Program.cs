@@ -57,6 +57,10 @@ builder.Services.AddScoped<IFileStorage, MinioFileStorage>();
 // Регистрируем сервис инициализации bucket в MinIO
 builder.Services.AddScoped<MinioBucketInitializer>();
 
+// Регистрируем фоновый сервис для автоматического удаления
+// Attachment, которые остаются без Task и Comment дольше 30 дней
+builder.Services.AddHostedService<OrphanedAttachmentCleanupService>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

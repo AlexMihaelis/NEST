@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using NEST.Application.Common.Interfaces;
 using NEST.Domain.Entities.TODO;
 
@@ -22,6 +23,44 @@ public class CreateAttachmentCommandHandler : IRequestHandler<CreateAttachmentCo
         CreateAttachmentCommand request,
         CancellationToken cancellationToken)
     {
+        // Если указан TaskId, проверяем, что такой Task существует
+        if (request.TaskId.HasValue)
+        {
+            var taskExists = await _context.Tasks
+                .AnyAsync(
+                    t => t.Id == request.TaskId.Value,
+                    cancellationToken);
+
+            if (!taskExists)
+            {
+                throw new KeyNotFoundException(
+                    $"Task with id '{request.TaskId}' was not found.");
+            }
+        }
+
+        // Если указан CommentId, получаем комментарий вместе с TaskId, чтобы проверить существование комментария и его связь с Task
+        if (request.CommentId.HasValue)
+        {
+            var commentTaskId = await _context.Comments
+                .Where(c => c.Id == request.CommentId.Value)
+                .Select(c => (Guid?)c.TaskId)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (commentTaskId is null)
+            {
+                throw new KeyNotFoundException(
+                    $"Comment with id '{request.CommentId}' was not found.");
+            }
+
+            // Если указаны и TaskId, и CommentId, комментарий должен принадлежать этому Task
+            if (request.TaskId.HasValue &&
+                commentTaskId.Value != request.TaskId.Value)
+            {
+                throw new InvalidOperationException(
+                    "The specified comment does not belong to the specified task.");
+            }
+        }
+
         var attachmentId = Guid.NewGuid();
 
         var safeFileName = Path.GetFileName(request.FileName);
@@ -57,7 +96,9 @@ public class CreateAttachmentCommandHandler : IRequestHandler<CreateAttachmentCo
         catch
         {
             // Если запись в бд не сохранилась, удаляем уже загруженный файл из MinIO
-            await _fileStorage.DeleteAsync(storageKey, cancellationToken);
+            await _fileStorage.DeleteAsync(
+                storageKey,
+                cancellationToken);
 
             throw;
         }

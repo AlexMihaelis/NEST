@@ -17,6 +17,7 @@ public class Attachment
     
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public DateTime? OrphanedAt { get; set; }
     
     public Guid UploadedByUserId { get; set; }
     public User UploadedByUser { get; set; }
