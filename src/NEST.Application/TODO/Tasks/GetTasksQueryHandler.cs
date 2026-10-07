@@ -26,7 +26,7 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, List<Task>?>
             return null;
         }
         
-        // Получаем задачи колонки и сортируем их попозиции
+        // Получаем задачи колонки и сортируем их по позиции
         return await _context.Tasks
             .Where(t => t.ColumnId == request.ColumnId)
             .OrderBy(t => t.Position)

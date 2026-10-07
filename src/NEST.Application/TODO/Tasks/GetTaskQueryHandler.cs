@@ -6,11 +6,11 @@ using Task = NEST.Domain.Entities.TODO.Task;
 namespace NEST.Application.TODO.Tasks;
 
 // Handler выполняет действие, описанное в GetTaskQuery
-public class GetColumnQueryHandler : IRequestHandler<GetTaskQuery, Task?>
+public class GetTaskQueryHandler : IRequestHandler<GetTaskQuery, Task?>
 {
     private readonly IApplicationDbContext _context;
 
-    public GetColumnQueryHandler(IApplicationDbContext context)
+    public GetTaskQueryHandler(IApplicationDbContext context)
     {
         _context = context;
     }

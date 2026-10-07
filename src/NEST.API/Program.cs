@@ -14,6 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSwaggerGen();
 
+// Настраиваем CORS для Angular-клиента.
+// Разрешаем frontend обращаться к API с локального адреса разработки.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularClient", policy =>
+    {
+        policy
+            .WithOrigins("http://127.0.0.1:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Настройка Dependency Injection (DI - внедрение зависимостей):
 // Регистрируем DbContext и подключаем PostgreSQL
 builder.Services.AddDbContext<NestDbContext>(options =>
@@ -91,6 +104,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Применяем CORS-политику для Angular-клиента.
+app.UseCors("AngularClient");
 
 app.MapControllers();
 
