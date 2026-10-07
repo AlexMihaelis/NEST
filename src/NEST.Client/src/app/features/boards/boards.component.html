@@ -1,0 +1,44 @@
+<div class="boards-page">
+  <h1>Мои доски</h1>
+
+  <section class="boards-container">
+    <div class="boards-grid">
+      @if (boards().length === 0) {
+        <p>Досок пока нет.</p>
+      } @else {
+        @for (board of paginatedBoards(); track board.id) {
+          <a
+            class="board-card"
+            [routerLink]="['/boards', board.id]">
+
+            <h2>{{ truncateName(board.name) }}</h2>
+
+            @if (board.description) {
+              <p>{{ truncateDescription(board.description) }}</p>
+            }
+          </a>
+        }
+      }
+    </div>
+  </section>
+
+  <div class="pagination">
+    <button
+      type="button"
+      [disabled]="currentPage() === 1"
+      (click)="previousPage()">
+      ←
+    </button>
+
+    <span class="current-page">
+    {{ currentPage() }}
+  </span>
+
+    <button
+      type="button"
+      [disabled]="currentPage() === totalPages()"
+      (click)="nextPage()">
+      →
+    </button>
+  </div>
+</div>

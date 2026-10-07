@@ -1,0 +1,21 @@
+@if (board(); as currentBoard) {
+  <h1>Доска - {{ currentBoard.name }}</h1>
+}
+
+<section>
+  @for (column of columns(); track column.id) {
+    <div>
+      <h2>{{ column.name }}</h2>
+
+      @for (task of tasksByColumn().get(column.id) ?? []; track task.id) {
+        <div>
+          <h3>{{ task.name }}</h3>
+
+          @if (task.description) {
+            <p>{{ task.description }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+</section>
