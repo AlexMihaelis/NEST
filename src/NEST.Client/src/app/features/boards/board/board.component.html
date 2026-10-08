@@ -2,20 +2,89 @@
   <h1>Доска - {{ currentBoard.name }}</h1>
 }
 
-<section>
-  @for (column of columns(); track column.id) {
-    <div>
-      <h2>{{ column.name }}</h2>
+<section class="board">
+  <div class="columns">
+    @for (column of columns(); track column.id) {
+      <div class="column">
+        <h2>{{ column.name }}</h2>
 
-      @for (task of tasksByColumn().get(column.id) ?? []; track task.id) {
-        <div>
-          <h3>{{ task.name }}</h3>
+        <div class="tasks">
+          @for (task of tasksByColumn().get(column.id) ?? []; track task.id) {
+            <div class="task-card">
+              <h3>{{ task.name }}</h3>
 
-          @if (task.description) {
-            <p>{{ task.description }}</p>
+              @if (task.description) {
+                <p>{{ task.description }}</p>
+              }
+
+              <button
+                type="button"
+                (click)="openEditTask(task)">
+                Редактировать
+              </button>
+            </div>
           }
         </div>
-      }
-    </div>
-  }
+      </div>
+    }
+  </div>
 </section>
+
+@if (editingTask(); as task) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h2>Редактирование задачи</h2>
+
+      <form [formGroup]="editTaskForm" (ngSubmit)="saveTask()">
+
+        <label>
+          Название
+          <input
+            type="text"
+            formControlName="name">
+        </label>
+
+        <label>
+          Описание
+          <textarea
+            formControlName="description">
+          </textarea>
+        </label>
+
+        <label>
+          Приоритет
+          <input
+            type="number"
+            formControlName="priority">
+        </label>
+
+        <label>
+          Дедлайн
+          <input
+            type="datetime-local"
+            formControlName="deadline">
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            formControlName="isCompleted">
+          Выполнена
+        </label>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            (click)="closeEditTask()">
+            Отмена
+          </button>
+
+          <button type="submit">
+            Сохранить
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}

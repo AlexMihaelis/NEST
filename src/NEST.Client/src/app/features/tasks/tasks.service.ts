@@ -10,12 +10,28 @@ import { Task } from './task.model';
 })
 export class TasksService {
   // Базовый URL API для работы с задачами колонок
-  private readonly apiUrl = `${environment.apiUrl}/api/columns`;
+  private readonly tasksApiUrl = `${environment.apiUrl}/api/tasks`;
+  private readonly columnsApiUrl = `${environment.apiUrl}/api/columns`;
 
   constructor(private readonly http: HttpClient) {}
 
   // Получает список задач конкретной колонки с backend
   getByColumnId(columnId: string): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiUrl}/${columnId}/tasks`);
+    return this.http.get<Task[]>(`${this.columnsApiUrl}/${columnId}/tasks`);
+  }
+
+  // Обновляет существующую задачу на backend
+  update(
+    taskId: string,
+    task: {
+      name: string;
+      description: string;
+      priority: number;
+      deadline: string | null;
+      isCompleted: boolean;
+      taskContextId: string | null;
+    }
+  ): Observable<void> {
+    return this.http.put<void>(`${this.tasksApiUrl}/${taskId}`, task);
   }
 }

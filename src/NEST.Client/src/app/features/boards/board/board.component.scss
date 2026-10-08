@@ -1,2 +1,111 @@
-// Пока стили страницы доски не добавляем.
-// Дизайн сделаем позже.
+// Основная область доски
+.board {
+  width: 100%;
+}
+
+// Контейнер всех колонок
+// Колонки располагаются горизонтально
+.columns {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+// Отдельная колонка
+.column {
+  flex: 0 0 300px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+// Список задач внутри колонки
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// Карточка задачи
+.task-card {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+// Затемнение страницы за модальным окном
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgb(0 0 0 / 40%);
+}
+
+// Само модальное окно
+.modal {
+  width: 500px;
+  max-width: calc(100% - 32px);
+  padding: 24px;
+
+  background: white;
+  border-radius: 8px;
+}
+
+// Заголовок модального окна
+.modal h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+// Форма редактирования
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Каждое поле формы
+// Label и его input теперь располагаются вертикально
+.modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+}
+
+// Общий стиль текстовых полей
+.modal input,
+.modal textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+
+  font: inherit;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+// Описание должно быть выше обычного input
+.modal textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+// Checkbox не должен растягиваться на всю ширину
+.modal label:has(input[type='checkbox']) {
+  flex-direction: row;
+  align-items: center;
+}
+
+// Контейнер кнопок
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
