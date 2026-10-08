@@ -3,9 +3,16 @@
 }
 
 <section class="board">
-  <div class="columns">
+  <div class="columns" cdkDropListGroup>
     @for (column of columns(); track column.id) {
-      <div class="column">
+      <div
+        class="column"
+        cdkDropList
+        [cdkDropListData]="{
+        columnId: column.id,
+        tasks: tasksByColumn().get(column.id) ?? []
+        }"
+        (cdkDropListDropped)="dropTask($event)">
         <h2>{{ column.name }}</h2>
 
         <button
@@ -16,7 +23,7 @@
 
         <div class="tasks">
           @for (task of tasksByColumn().get(column.id) ?? []; track task.id) {
-            <div class="task-card">
+            <div class="task-card" cdkDrag>
               <h3>{{ task.name }}</h3>
 
               @if (task.description) {

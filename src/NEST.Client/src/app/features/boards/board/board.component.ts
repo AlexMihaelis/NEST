@@ -1,4 +1,9 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  OnInit,
+  signal
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Board } from '../board.model';
@@ -8,10 +13,19 @@ import { ColumnsService } from '../../columns/columns.service';
 import { Task } from '../../tasks/task.model';
 import { TasksService } from '../../tasks/tasks.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  CdkDragDrop,
+  DragDropModule
+} from '@angular/cdk/drag-drop';
+
+interface TaskDropListData {
+  columnId: string;
+  tasks: Task[];
+}
 
 @Component({
   selector: 'app-board',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DragDropModule],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss'
 })
@@ -104,6 +118,97 @@ export class BoardComponent implements OnInit {
         console.error('Ошибка при получении колонок:', error);
       }
     });
+  }
+
+  protected dropTask(event: CdkDragDrop<TaskDropListData>): void {
+    const task = event.previousContainer.data.tasks[event.previousIndex];
+
+    if (!task) {
+      return;
+    }
+
+    const sourceColumnId = event.previousContainer.data.columnId;
+    const targetColumnId = event.container.data.columnId;
+    const targetPosition = event.currentIndex;
+
+    // Если задача фактически осталась на том же месте,
+    // запрос на backend не нужен
+    if (
+      sourceColumnId === targetColumnId &&
+      event.previousIndex === event.currentIndex
+    ) {
+      return;
+    }
+
+    // Создаем копии списков задач
+    const sourceTasks = [...event.previousContainer.data.tasks];
+    const targetTasks =
+      sourceColumnId === targetColumnId
+        ? sourceTasks
+        : [...event.container.data.tasks];
+
+    // Удаляем задачу из исходной колонки
+    sourceTasks.splice(event.previousIndex, 1);
+
+    if (sourceColumnId === targetColumnId) {
+      // Перемещение внутри той же колонки
+      sourceTasks.splice(event.currentIndex, 0, task);
+    } else {
+      // Перемещение в другую колонку
+      const movedTask: Task = {
+        ...task,
+        columnId: targetColumnId
+      };
+
+      targetTasks.splice(event.currentIndex, 0, movedTask);
+    }
+
+    // Сохраняем перемещение на backend
+    this.tasksService
+      .move(task.id, {
+        targetColumnId,
+        targetPosition
+      })
+      .subscribe({
+        next: () => {
+          // Backend успешно сохранил перемещение
+          // Теперь обновляем локальное состояние Angular
+          this.tasks.update(tasks => {
+            const otherTasks = tasks.filter(
+              currentTask =>
+                currentTask.columnId !== sourceColumnId &&
+                currentTask.columnId !== targetColumnId
+            );
+
+            const updatedSourceTasks = sourceTasks.map(
+              (currentTask, index) => ({
+                ...currentTask,
+                position: index
+              })
+            );
+
+            const updatedTargetTasks =
+              sourceColumnId === targetColumnId
+                ? []
+                : targetTasks.map((currentTask, index) => ({
+                  ...currentTask,
+                  position: index
+                }));
+
+            return [
+              ...otherTasks,
+              ...updatedSourceTasks,
+              ...updatedTargetTasks
+            ];
+          });
+        },
+        error: error => {
+          console.error(
+            'Не удалось сохранить перемещение задачи:',
+            error
+          );
+        }
+      });
   }
 
   // Открывает модальное окно и заполняет форму данными выбранной задачи
@@ -301,4 +406,6 @@ export class BoardComponent implements OnInit {
 
     return new Date(value).toISOString();
   }
+
+
 }

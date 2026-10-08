@@ -59,4 +59,18 @@ export class TasksService {
   delete(taskId: string): Observable<void> {
     return this.http.delete<void>(`${this.tasksApiUrl}/${taskId}`);
   }
+
+  // Сохранение перемещения задач между колонками и позициями
+  move(
+    taskId: string,
+    move: {
+      targetColumnId: string;
+      targetPosition: number;
+    }
+  ): Observable<void> {
+    return this.http.put<void>(
+      `${this.tasksApiUrl}/${taskId}/move`,
+      move
+    );
+  }
 }
