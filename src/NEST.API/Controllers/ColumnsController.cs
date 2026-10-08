@@ -120,4 +120,27 @@ public class ColumnsController : ControllerBase
         
         return NoContent();
     }
+    
+    [HttpPut("{columnId:guid}/move")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Move(
+        Guid columnId,
+        MoveColumnRequest request,
+        CancellationToken cancellationToken)
+    {
+        var moved = await _sender.Send(
+            new MoveColumnCommand(
+                columnId,
+                request.TargetPosition),
+            cancellationToken);
+
+        if (!moved)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
 }
