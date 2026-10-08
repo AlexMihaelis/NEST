@@ -8,6 +8,12 @@
       <div class="column">
         <h2>{{ column.name }}</h2>
 
+        <button
+          type="button"
+          (click)="openCreateTask(column.id)">
+          + Добавить задачу
+        </button>
+
         <div class="tasks">
           @for (task of tasksByColumn().get(column.id) ?? []; track task.id) {
             <div class="task-card">
@@ -117,6 +123,58 @@
           Удалить
         </button>
       </div>
+    </div>
+  </div>
+}
+
+@if (creatingTaskColumnId()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h2>Создание задачи</h2>
+
+      <form [formGroup]="createTaskForm" (ngSubmit)="createTask()">
+
+        <label>
+          Название
+          <input
+            type="text"
+            formControlName="name">
+        </label>
+
+        <label>
+          Описание
+          <textarea
+            formControlName="description">
+          </textarea>
+        </label>
+
+        <label>
+          Приоритет
+          <input
+            type="number"
+            formControlName="priority">
+        </label>
+
+        <label>
+          Дедлайн
+          <input
+            type="datetime-local"
+            formControlName="deadline">
+        </label>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            (click)="closeCreateTask()">
+            Отмена
+          </button>
+
+          <button type="submit">
+            Создать
+          </button>
+        </div>
+
+      </form>
     </div>
   </div>
 }

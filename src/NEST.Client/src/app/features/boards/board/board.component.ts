@@ -34,6 +34,10 @@ export class BoardComponent implements OnInit {
   // Если null — модальное окно удаления закрыто
   protected readonly deletingTask = signal<Task | null>(null);
 
+  // Храним идентификатор колонки для новой задачи
+  // Если null — модальное окно создания закрыто
+  protected readonly creatingTaskColumnId = signal<string | null>(null);
+
   // Группируем задачи по идентификатору колонки
   // Для каждой колонки получаем только те задачи, которые принадлежат этой колонке
   protected readonly tasksByColumn = computed(() => {
@@ -130,6 +134,73 @@ export class BoardComponent implements OnInit {
     isCompleted: new FormControl(false, { nonNullable: true }),
     taskContextId: new FormControl<string | null>(null)
   });
+
+  // Форма создания новой задачи
+  protected readonly createTaskForm = new FormGroup({
+    name: new FormControl('', { nonNullable: true }),
+    description: new FormControl('', { nonNullable: true }),
+    priority: new FormControl(0, { nonNullable: true }),
+    deadline: new FormControl<string | null>(null),
+    taskContextId: new FormControl<string | null>(null)
+  });
+
+  // Открывает модальное окно создания задачи для выбранной колонки
+  protected openCreateTask(columnId: string): void {
+    this.createTaskForm.reset({
+      name: '',
+      description: '',
+      priority: 0,
+      deadline: null,
+      taskContextId: null
+    });
+
+    this.creatingTaskColumnId.set(columnId);
+  }
+
+  // Закрывает модальное окно создания задачи
+  protected closeCreateTask(): void {
+    this.creatingTaskColumnId.set(null);
+  }
+
+  // Создает новую задачу на backend
+  protected createTask(): void {
+    const columnId = this.creatingTaskColumnId();
+
+    if (!columnId) {
+      return;
+    }
+
+    const formValue = this.createTaskForm.getRawValue();
+
+    // datetime-local хранит локальное время без часового пояса
+    // Перед отправкой преобразуем его в UTC ISO-строку
+    const createRequest = {
+      ...formValue,
+      deadline: this.toUtcIso(formValue.deadline),
+      columnId
+    };
+
+    this.tasksService.create(createRequest).subscribe({
+      next: (response) => {
+        // После создания получаем задачу целиком с backend
+        this.tasksService.getById(response.taskId).subscribe({
+          next: (task) => {
+            // Добавляем новую задачу в локальный список
+            this.tasks.update(tasks => [...tasks, task]);
+
+            // Закрываем модальное окно
+            this.closeCreateTask();
+          },
+          error: (error) => {
+            console.error('Ошибка при получении созданной задачи:', error);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Ошибка при создании задачи:', error);
+      }
+    });
+  }
 
   // Сохраняет изменения выбранной задачи на backend.
   protected saveTask(): void {

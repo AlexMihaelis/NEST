@@ -20,6 +20,26 @@ export class TasksService {
     return this.http.get<Task[]>(`${this.columnsApiUrl}/${columnId}/tasks`);
   }
 
+  // Получает одну задачу по ее идентификатору с backend
+  getById(taskId: string): Observable<Task> {
+    return this.http.get<Task>(`${this.tasksApiUrl}/${taskId}`);
+  }
+
+  // Создает новую задачу в выбранной колонке
+  create(task: {
+    name: string;
+    description: string;
+    priority: number;
+    deadline: string | null;
+    taskContextId: string | null;
+    columnId: string;
+  }): Observable<{ taskId: string }> {
+    return this.http.post<{ taskId: string }>(
+      this.tasksApiUrl,
+      task
+    );
+  }
+
   // Обновляет существующую задачу на backend
   update(
     taskId: string,
