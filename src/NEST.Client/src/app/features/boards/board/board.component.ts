@@ -30,6 +30,10 @@ export class BoardComponent implements OnInit {
   // Если null — модальное окно закрыто
   protected readonly editingTask = signal<Task | null>(null);
 
+  // Храним задачу, которую сейчас собираемся удалить
+  // Если null — модальное окно удаления закрыто
+  protected readonly deletingTask = signal<Task | null>(null);
+
   // Группируем задачи по идентификатору колонки
   // Для каждой колонки получаем только те задачи, которые принадлежат этой колонке
   protected readonly tasksByColumn = computed(() => {
@@ -75,7 +79,7 @@ export class BoardComponent implements OnInit {
         // Сохраняем полученные колонки в signal
         this.columns.set(columns);
 
-        // Для каждой колонки загружаем её задачи с backend
+        // Для каждой колонки загружаем ее задачи с backend
         const taskRequests = columns.map(column =>
           this.tasksService.getByColumnId(column.id)
         );
@@ -163,6 +167,40 @@ export class BoardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Ошибка при обновлении задачи:', error);
+      }
+    });
+  }
+
+  // Открывает модальное окно подтверждения удаления
+  protected deleteTask(task: Task): void {
+    this.deletingTask.set(task);
+  }
+
+  // Закрывает модальное окно подтверждения удаления
+  protected closeDeleteTask(): void {
+    this.deletingTask.set(null);
+  }
+
+  // Удаляет задачу после подтверждения пользователя
+  protected confirmDeleteTask(): void {
+    const task = this.deletingTask();
+
+    if (!task) {
+      return;
+    }
+
+    this.tasksService.delete(task.id).subscribe({
+      next: () => {
+        // Убираем удаленную задачу из локального списка
+        this.tasks.update(tasks =>
+          tasks.filter(currentTask => currentTask.id !== task.id)
+        );
+
+        // Закрываем модальное окно после успешного удаления
+        this.closeDeleteTask();
+      },
+      error: (error) => {
+        console.error('Ошибка при удалении задачи:', error);
       }
     });
   }

@@ -22,6 +22,11 @@
                 (click)="openEditTask(task)">
                 Редактировать
               </button>
+              <button
+                type="button"
+                (click)="deleteTask(task)">
+                Удалить
+              </button>
             </div>
           }
         </div>
@@ -85,6 +90,33 @@
         </div>
 
       </form>
+    </div>
+  </div>
+}
+
+@if (deletingTask(); as task) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h2>Удалить задачу?</h2>
+
+      <p>
+        Вы уверены, что хотите удалить задачу
+        «{{ task.name }}»?
+      </p>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          (click)="closeDeleteTask()">
+          Отмена
+        </button>
+
+        <button
+          type="button"
+          (click)="confirmDeleteTask()">
+          Удалить
+        </button>
+      </div>
     </div>
   </div>
 }

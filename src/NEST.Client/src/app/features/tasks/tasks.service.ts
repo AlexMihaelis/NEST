@@ -34,4 +34,9 @@ export class TasksService {
   ): Observable<void> {
     return this.http.put<void>(`${this.tasksApiUrl}/${taskId}`, task);
   }
+
+  // Удаляет существующую задачу на backend
+  delete(taskId: string): Observable<void> {
+    return this.http.delete<void>(`${this.tasksApiUrl}/${taskId}`);
+  }
 }
