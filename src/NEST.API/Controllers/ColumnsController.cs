@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NEST.API.Controllers.Requests.Columns;
 using NEST.Application.TODO.Columns;
 
 namespace NEST.API.Controllers;
@@ -126,6 +127,29 @@ public class ColumnsController : ControllerBase
             return NotFound();
         }
         
+        return NoContent();
+    }
+    
+    [HttpPut("{columnId:guid}/move")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Move(
+        Guid columnId,
+        MoveColumnRequest request,
+        CancellationToken cancellationToken)
+    {
+        var moved = await _sender.Send(
+            new MoveColumnCommand(
+                columnId,
+                request.TargetPosition),
+            cancellationToken);
+
+        if (!moved)
+        {
+            return NotFound();
+        }
+
         return NoContent();
     }
 }
